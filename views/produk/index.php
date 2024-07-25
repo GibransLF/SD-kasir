@@ -53,6 +53,7 @@ table {
                 <th>No</th>
                 <th>Nama Produk</th>
                 <th>Quantity</th>
+                <th>Harga Awal</th>
                 <th>Harga Jual</th>
                 <th>Action</th>
             </tr>
@@ -73,7 +74,10 @@ table {
                             <?= $row["qty_awal"] ?>
                         </td>
                         <td>
-                            <?= $row["harga_jual"] ?>
+                            Rp.<?= $row["harga_awal"] ?>
+                        </td>
+                        <td>
+                            Rp.<?= $row["harga_jual"] ?>
                         </td>
                         <td style="text-align: center">
                             <a href="ubah.php?id= <?= $row['id_produk'] ?>">Ubah</a>
@@ -99,11 +103,14 @@ table {
                 <th>No</th>
                 <th>Nama Produk</th>
                 <th>Quantity</th>
+                <th>Harga Awal</th>
                 <th>Harga Jual</th>
                 <th>Action</th>
             </tr>
         </table>
     </section>
     <!-- end content -->
+    <br><br>
+    <a href="../penjualan/index.php">Penjualan</a>
 </body>
 </html>

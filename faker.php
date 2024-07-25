@@ -11,11 +11,12 @@ $sql = NULL;
 for ($i = 0; $i < 5; $i++) {
     $nama_produk = $faker->word;
     $qty_awal = $faker->randomNumber(2,true);
-    $harga_jual = $faker->randomFloat(0, 500, 100000);
+    $harga_awal = $faker->randomFloat(0, 500, 100000);
+    $harga_jual = $harga_awal + 500;
 
-    $sql .= "INSERT INTO produk(nama_produk, qty_awal, harga_jual) VALUES ('$nama_produk', '$qty_awal', '$harga_jual');";
+    $sql .= "INSERT INTO produk(nama_produk, qty_awal, harga_awal, harga_jual) VALUES ('$nama_produk', '$qty_awal', '$harga_awal', '$harga_jual');";
 
-    echo "INSERT INTO produk(nama_produk, qty_awal, harga_jual) VALUES ('$nama_produk', '$qty_awal', '$harga_jual'); <br>";
+    echo "INSERT INTO produk(nama_produk, qty_awal, harga_jual) VALUES ('$nama_produk', '$qty_awal', '$harga_awal', '$harga_jual'); <br>";
 }
 
 if ($conn->multi_query($sql) === TRUE) {
@@ -28,4 +29,4 @@ if ($conn->multi_query($sql) === TRUE) {
 
 $conn->close();
 ?>
-<a href="index.php">pergi ke hmome page</a>
+<a href="index.html">pergi ke home page</a>

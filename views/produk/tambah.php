@@ -5,13 +5,14 @@ require "../../koneksi.php";
 if(isset($_POST["tambah"])){
     $nama_produk = $_POST["nama"];
     $qty_awal = $_POST["qty"];
-    $harga_jual = $_POST["harga"];
+    $harga_awal = $_POST["harga_awal"];
+    $harga_jual = $_POST["harga_jual"];
 
-    if(!$nama_produk || !$qty_awal || !$harga_jual){
+    if(!$nama_produk || !$qty_awal || !$harga_awal || !$harga_jual){
         echo "<script>alert('Data Harus diIsi!')</script>";
     }
     else{
-        $sql = "INSERT INTO produk (nama_produk, qty_awal, harga_jual) VALUES ('$nama_produk', '$qty_awal', '$harga_jual')";
+        $sql = "INSERT INTO produk (nama_produk, qty_awal, harga_awal, harga_jual) VALUES ('$nama_produk', '$qty_awal', '$harga_awal', '$harga_jual')";
     
         mysqli_query($conn, $sql);
     
@@ -59,8 +60,10 @@ label, input, button{
         <input type="text" id="nama" name="nama"><br>
         <label for="qty">Quantity:</label><br>
         <input type="number" min="0" id="qty" name="qty"><br>
-        <label for="harga">Harga Jual:</label><br>
-        <input type="number" min="1" id="harga" name="harga">
+        <label for="harga_awal">Harga Awal:</label><br>
+        <input type="number" min="1" id="harga_awal" name="harga_awal"><br>
+        <label for="harga_jual">Harga Jual:</label><br>
+        <input type="number" min="1" id="harga_jual" name="harga_jual">
         <div style="position: flex">
             <a href="index.php"><button type="button">Kembali</button></a>
             <button type="submit" name="tambah">Tambah</button>

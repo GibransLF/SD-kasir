@@ -13,6 +13,7 @@ if(!$tableExists){
         id_produk INT PRIMARY KEY AUTO_INCREMENT,
         nama_produk VARCHAR(255),
         qty_awal INT(11),
+        harga_awal INT(11),
         harga_jual INT(11),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -39,6 +40,7 @@ if(!$tableExists){
         tanggal DATE,
         produk_id INT(11),
         qty_terjual INT(11),
+        total_harga_dasar INT(11),
         total_harga_jual INT(11),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
