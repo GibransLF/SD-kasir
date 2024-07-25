@@ -12,3 +12,8 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 //     die("Connection failed: " . $conn->connect_error);
 // }
 // echo "Connected successfully";
+
+//fumnction
+function formatRupiah($angka) {
+    return 'Rp ' . number_format($angka, 2, ',', '.');
+}

@@ -87,7 +87,7 @@ table {
                 <button type="submit" name="cari">Cari</button>
             </form>
             <a href="tambah.php">
-                <button style="float:right; padding: 12px;">Tambah Produk +</button>
+                <button style="float:right; padding: 12px;">Tambah Penjualan +</button>
             </a>
         </div>
         <table>
@@ -96,6 +96,7 @@ table {
                 <th>Tanggal</th>
                 <th>Nama Produk</th>
                 <th>Qty Terjual</th>
+                <th>Total Harga Dasar</th>
                 <th>Total Harga Jual</th>
             </tr>
 
@@ -116,10 +117,13 @@ table {
                             <?= htmlspecialchars($data["nama_produk"]) ?>
                         </td>
                         <td>
-                            Rp.<?= $data["total_harga_dasar"] ?>
+                            <?= $data['qty_terjual'] ?>
                         </td>
                         <td>
-                            Rp.<?= $data["total_harga_jual"] ?>
+                            <?= formatRupiah($data["total_harga_dasar"]) ?>
+                        </td>
+                        <td>
+                            <?= formatRupiah($data["total_harga_jual"]) ?>
                         </td>
                     </tr>
 
@@ -138,8 +142,8 @@ table {
             }
             ?>
             <tr>
-                <th colspan="4">Total Harga Jual</th>
-                <th>Rp.<?= $sum_harga_jual ?></th>
+                <th colspan="5">Total Penjualan</th>
+                <th><?= formatRupiah($sum_harga_jual) ?></th>
             </tr>
         </table>
     </section>

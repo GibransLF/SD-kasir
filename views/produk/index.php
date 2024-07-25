@@ -74,10 +74,10 @@ table {
                             <?= $row["qty_awal"] ?>
                         </td>
                         <td>
-                            Rp.<?= $row["harga_awal"] ?>
+                            <?= formatRupiah($row["harga_awal"]) ?>
                         </td>
                         <td>
-                            Rp.<?= $row["harga_jual"] ?>
+                            Rp.<?= formatRupiah($row["harga_jual"]) ?>
                         </td>
                         <td style="text-align: center">
                             <a href="ubah.php?id= <?= $row['id_produk'] ?>">Ubah</a>
