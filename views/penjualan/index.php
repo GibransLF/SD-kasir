@@ -3,6 +3,39 @@ require "../../koneksi.php";
 
 $sql = "SELECT * FROM penjualan LEFT JOIN produk ON penjualan.produk_id = produk.id_produk";
 
+//search
+//jika button cari di klik
+if(isset($_GET['cari'])){
+    //cek tanggal
+    if($_GET['tgl_awal'] > $_GET['tgl_akhir']){
+        echo "<script>alert('tanggal Akhir tidak bisa lebih kecil dari tanggal Awal');</script>";
+
+        $_GET['tgl_awal']= '';
+        $_GET['tgl_akhir'] = '';
+    }
+
+    $produk = $_GET['produk'];
+    $tgl_awal = $_GET['tgl_awal'];
+    $tgl_akhir = $_GET['tgl_akhir'];
+    
+    if($produk == ""){
+        $sql .= " WHERE NOT nama_produk = ''";
+    }
+    else{
+        $sql .= " WHERE nama_produk LIKE '%$produk%'";
+    }
+
+    if($tgl_awal){
+        if(!$tgl_akhir){
+            $now = date('Y-m-d');
+            $sql .= " AND tanggal BETWEEN '$tgl_awal' AND '$now'"; 
+        }
+        else{
+            $sql .= " AND tanggal BETWEEN '$tgl_awal' AND '$tgl_akhir'"; 
+        }
+    }
+}
+
 try {
     $result = $conn->query($sql);
 } 
@@ -11,7 +44,6 @@ catch (mysqli_sql_exception $e) {
     echo "<a href='../../table.php'>buat Tabel</a>";
     die();
 }
-
 ?>
 
 <style>
@@ -45,9 +77,19 @@ table {
     <!-- content -->
     <h1 style="text-align:center">Kasir</h1>
     <section>
-        <a href="#">
-            <button style="float:right; margin:10px; padding: 12px;">Tambah Penjualan +</button>
-        </a>
+        <div style="display: flex; justify-content: space-between;  margin:10px;">
+            <!-- search -->
+            <form action="" method="get" style="margin: 10px;">
+                <input style="width: 60vh;" type="text" name="produk" placeholder="Cari Nama Produk..." value="<?= isset($_GET['produk']) ? $_GET['produk'] : ''; ?>">
+                <input style="width: 20vh;" type="date" name="tgl_awal" value="<?= isset($_GET['tgl_awal']) ? $_GET['tgl_awal'] : ''; ?>">
+                &nbsp;~&nbsp;
+                <input style="width: 20vh;" type="date" name="tgl_akhir" value="<?= isset($_GET['tgl_akhir']) ? $_GET['tgl_akhir'] : ''; ?>">
+                <button type="submit" name="cari">Cari</button>
+            </form>
+            <a href="tambah.php">
+                <button style="float:right; padding: 12px;">Tambah Produk +</button>
+            </a>
+        </div>
         <table>
             <tr>
                 <th>No</th>
