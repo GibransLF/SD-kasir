@@ -1,5 +1,6 @@
 <?php 
 require "../../koneksi.php";
+require "../../function.php";
 
 $sql = "SELECT * FROM produk";
 

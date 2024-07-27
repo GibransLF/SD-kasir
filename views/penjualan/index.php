@@ -1,5 +1,6 @@
 <?php 
 require "../../koneksi.php";
+require "../../function.php";
 
 $sql = "SELECT * FROM penjualan LEFT JOIN produk ON penjualan.produk_id = produk.id_produk";
 
@@ -78,6 +79,9 @@ table {
     <h1 style="text-align:center">Kasir</h1>
     <section>
         <div style="display: flex; justify-content: space-between;  margin:10px;">
+            <form action="exportXlsx.php" method="post">
+                <button type="submit" name="export" style="padding: 12px;">Export to Excel</button>
+            </form>
             <!-- search -->
             <form action="" method="get" style="margin: 10px;">
                 <input style="width: 60vh;" type="text" name="produk" placeholder="Cari Nama Produk..." value="<?= isset($_GET['produk']) ? $_GET['produk'] : ''; ?>">
@@ -102,6 +106,7 @@ table {
 
             <?php
             $no = 1;
+            $sum_harga_dasar = 0;
             $sum_harga_jual = 0;
             if (mysqli_num_rows($result) > 0) {
                 foreach($result as $data) {
@@ -129,6 +134,7 @@ table {
 
                     <?php
                     $no++;
+                    $sum_harga_dasar += $data["total_harga_dasar"];
                     $sum_harga_jual += $data["total_harga_jual"];
                 }
             }
@@ -142,8 +148,13 @@ table {
             }
             ?>
             <tr>
-                <th colspan="5">Total Penjualan</th>
+                <th colspan="4">Total Penjualan</th>
+                <th><?= formatRupiah($sum_harga_dasar) ?></th>
                 <th><?= formatRupiah($sum_harga_jual) ?></th>
+            </tr>
+            <tr>
+                <th colspan="4">Total Laba</th>
+                <th colspan="2"><?= formatRupiah($sum_harga_jual - $sum_harga_dasar) ?></th>
             </tr>
         </table>
     </section>
