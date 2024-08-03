@@ -2,54 +2,30 @@
 require "../../koneksi.php";
 require "../../function.php";
 
+$monthNow = isset($_GET['bulan']) ? $_GET['bulan'] : date('m');
+
+$bulan = $monthNow;
 $sql = "SELECT * FROM penjualan 
         LEFT JOIN produk ON penjualan.produk_id = produk.id_produk
-        LEFT JOIN pelanggan ON penjualan.pelanggan_id = pelanggan.id_pelanggan";
+        LEFT JOIN pelanggan ON penjualan.pelanggan_id
+        WHERE MONTH(tanggal) = $bulan";
 
 $terlaris = "SELECT * FROM penjualan 
-LEFT JOIN produk ON penjualan.produk_id = produk.id_produk
-LEFT JOIN pelanggan ON penjualan.pelanggan_id
-ORDER BY qty_terjual DESC LIMIT 1";
+            LEFT JOIN produk ON penjualan.produk_id = produk.id_produk
+            LEFT JOIN pelanggan ON penjualan.pelanggan_id
+            WHERE MONTH(tanggal) = $bulan
+            ORDER BY qty_terjual DESC LIMIT 5";
 
-//search
-//jika button cari di klik
+//bulanutton cari di klik
 if(isset($_GET['cari'])){
-    //cek tanggal
-    if($_GET['tgl_awal'] > $_GET['tgl_akhir']){
-        echo "<script>alert('tanggal Akhir tidak bisa lebih kecil dari tanggal Awal');</script>";
+    //cek bulan
 
-        $_GET['tgl_awal']= '';
-        $_GET['tgl_akhir'] = '';
-    }
-
-    $pelanggan = $_GET['pelanggan'];
-    $produk = $_GET['produk'];
-    $tgl_awal = $_GET['tgl_awal'];
-    $tgl_akhir = $_GET['tgl_akhir'];
+    $bulan = $_GET['bulan'];
     
-    if($pelanggan == ""){
-        $sql .= " WHERE NOT nama = ''";
-    }
-    else{
-        $sql .= " WHERE nama LIKE '%$pelanggan%'";
-    }
-
-    if($produk == ""){
-        $sql .= " AND NOT nama_produk = ''";
-    }
-    else{
-        $sql .= " AND nama_produk LIKE '%$produk%'";
-    }
-
-    if($tgl_awal){
-        if(!$tgl_akhir){
-            $now = date('Y-m-d');
-            $sql .= " AND tanggal BETWEEN '$tgl_awal' AND '$now'"; 
-        }
-        else{
-            $sql .= " AND tanggal BETWEEN '$tgl_awal' AND '$tgl_akhir'"; 
-        }
-    }
+    $sql = "SELECT * FROM penjualan 
+        LEFT JOIN produk ON penjualan.produk_id = produk.id_produk
+        LEFT JOIN pelanggan ON penjualan.pelanggan_id
+        WHERE MONTH(tanggal) = $bulan";
 }
 
 try {
@@ -88,28 +64,30 @@ table {
 </head>
 <body>
     <header>
-        <a href="../../">HomePage</a> / Penjualan
+        <a href="../../">HomePage</a> / <a href="../penjualan/index.php">Penjualan</a> / Laporan Penjualan Bulanan
     </header>
         
     <!-- content -->
     <h1 style="text-align:center">Kasir</h1>
     <section>
         <div style="display: flex; justify-content: space-between;  margin:10px;">
-            <form action="exportXlsx.php" method="post">
+            <form action="exportXlsx.php?bulan=<?= $bulan ?>" method="post">
                 <button type="submit" name="export" style="padding: 12px;">Export to Excel</button>
             </form>
             <!-- search -->
             <form action="" method="get" style="margin: 10px;">
-                <input style="width: 30vh;" type="text" name="pelanggan" placeholder="Cari Nama Pelanggan..." value="<?= isset($_GET['pelanggan']) ? $_GET['pelanggan'] : ''; ?>">
-                <input style="width: 30vh;" type="text" name="produk" placeholder="Cari Nama Produk..." value="<?= isset($_GET['produk']) ? $_GET['produk'] : ''; ?>">
-                <input style="width: 20vh;" type="date" name="tgl_awal" value="<?= isset($_GET['tgl_awal']) ? $_GET['tgl_awal'] : ''; ?>">
-                &nbsp;~&nbsp;
-                <input style="width: 20vh;" type="date" name="tgl_akhir" value="<?= isset($_GET['tgl_akhir']) ? $_GET['tgl_akhir'] : ''; ?>">
-                <button type="submit" name="cari">Cari</button>
+            <select name="bulan" id="bulan" style="width:20vh">
+                <option value="<?= $monthNow ?>" hidden><?= $monthNow ?></option>
+                <?php for($numBulan = 1; $numBulan <13; $numBulan++) {?>
+
+                <option value="<?= $numBulan ?>"><?= $numBulan ?></option>
+
+                <?php
+                } 
+                ?>
+            </select>
+                <button type="submit" name="cari">Cari Bulan</button>
             </form>
-            <a href="tambah.php">
-                <button style="float:right; padding: 12px;">Tambah Penjualan +</button>
-            </a>
         </div>
         <table>
             <tr>
@@ -120,7 +98,7 @@ table {
                 <th>Qty Terjual</th>
                 <th>Total Harga Dasar</th>
                 <th>Total Harga Jual</th>
-                <th>Action</th>
+                <th>Laba</th>
             </tr>
 
             <?php
@@ -152,10 +130,8 @@ table {
                         <td>
                             <?= formatRupiah($data["total_harga_jual"]) ?>
                         </td>
-                        <td style="text-align: center">
-                            <a href="ubah.php?id= <?= $data['id_penjualan'] ?>">Ubah</a>
-                            &nbsp; | &nbsp;
-                            <a href="hapus.php?id= <?= $data["id_penjualan"] ?>&id_produk=<?= $data['produk_id'] ?>&qty=<?= $data['qty_terjual'] ?>" onclick="return confirm('apakah anda yakin ingin menghapusnya?')">Hapus</a>
+                        <td>
+                            <?= formatRupiah($data["total_harga_jual"] - $data["total_harga_dasar"]) ?>
                         </td>
                     </tr>
 
@@ -167,7 +143,7 @@ table {
             }
             else{
                 echo "<tr>";
-                    echo "<td colspan=7 style='text-align: center'>";
+                    echo "<td colspan=8 style='text-align: center'>";
                         echo "0 result";
                     echo "</td>";
                 echo "</tr>";
@@ -178,12 +154,7 @@ table {
                 <th colspan="5">Total Penjualan</th>
                 <th><?= formatRupiah($sum_harga_dasar) ?></th>
                 <th><?= formatRupiah($sum_harga_jual) ?></th>
-                <th>&nbsp;</th>
-            </tr>
-            <tr>
-                <th colspan="5">Total Laba</th>
-                <th colspan="2"><?= formatRupiah($sum_harga_jual - $sum_harga_dasar) ?></th>
-                <th>Action</th>
+                <th><?= formatRupiah($sum_harga_jual - $sum_harga_dasar) ?></th>
             </tr>
         </table>
     </section>
@@ -204,7 +175,7 @@ table {
             </tr>
             <?php
             $no = 1;
-            if (mysqli_num_rows($result) > 0) {
+            if (mysqli_num_rows($laris) > 0) {
                 foreach($laris as $data) {
                     ?>
                     <tr>
@@ -258,8 +229,6 @@ table {
         </table>
     </section>
     <!-- end content -->
-    <br>
-    <a href="../laporan/index.php">Laporan Penjualan Bulanan</a>
     <br><br>
     <a href="../produk/index.php">Produk</a>
     <br>

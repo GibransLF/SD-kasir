@@ -2,7 +2,7 @@
 require "../../koneksi.php";
 require "../../function.php";
 
-$sql = "SELECT * FROM produk";
+$sql = "SELECT * FROM pelanggan";
 
 try {
     $result = $conn->query($sql);
@@ -36,54 +36,46 @@ table {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kasir | Produk</title>
+    <title>Kasir | Pelanggan</title>
 </head>
 <body>
     <header>
-        <a href="../../">HomePage</a> / Produk
+        <a href="../../">HomePage</a> / Pelanggan
     </header>
         
     <!-- content -->
     <h1 style="text-align:center">Kasir</h1>
     <section>
         <a href="tambah.php">
-            <button style="float:right; margin:10px; padding: 12px;">Tambah Produk +</button>
+            <button style="float:right; margin:10px; padding: 12px;">Tambah Pelanggan +</button>
         </a>
         <table>
             <tr>
                 <th>No</th>
-                <th>Nama Produk</th>
-                <th>Quantity</th>
-                <th>Harga Awal</th>
-                <th>Harga Jual</th>
+                <th>Nama Pelanggan</th>
+                <th>No Telepon</th>
                 <th>Action</th>
             </tr>
 
             <?php
             $no = 1;
             if (mysqli_num_rows($result) > 0) {
-                while($row = mysqli_fetch_assoc($result)) {
+                foreach($result as $pelanggan) {
                     ?>
                     <tr>
                         <td style="text-align: center">
                             <?= $no ?>
                         </td>
                         <td>
-                            <?= htmlspecialchars($row["nama_produk"]) ?>
+                            <?= htmlspecialchars($pelanggan["nama"]) ?>
                         </td>
                         <td>
-                            <?= $row["qty_awal"] ?>
-                        </td>
-                        <td>
-                            <?= formatRupiah($row["harga_awal"]) ?>
-                        </td>
-                        <td>
-                            <?= formatRupiah($row["harga_jual"]) ?>
+                            <?=$pelanggan["no_hp"] ?>
                         </td>
                         <td style="text-align: center">
-                            <a href="ubah.php?id= <?= $row['id_produk'] ?>">Ubah</a>
+                            <a href="ubah.php?id= <?= $pelanggan['id_pelanggan'] ?>">Ubah</a>
                             &nbsp; | &nbsp;
-                            <a href="hapus.php?id= <?= $row["id_produk"] ?>" onclick="return confirm('apakah anda yakin ingin menghapusnya?')">Hapus</a>
+                            <a href="hapus.php?id= <?= $pelanggan["id_pelanggan"] ?>" onclick="return confirm('apakah anda yakin ingin menghapusnya?')">Hapus</a>
                         </td>
                     </tr>
 
@@ -102,18 +94,16 @@ table {
             ?>
             <tr>
                 <th>No</th>
-                <th>Nama Produk</th>
-                <th>Quantity</th>
-                <th>Harga Awal</th>
-                <th>Harga Jual</th>
+                <th>Nama Pelanggan</th>
+                <th>No Telepon</th>
                 <th>Action</th>
             </tr>
         </table>
     </section>
     <!-- end content -->
     <br><br>
-    <a href="../penjualan/index.php">Penjualan</a>
+    <a href="../produk/index.php">Produk</a>
     <br>
-    <a href="../pelanggan/index.php">Pelanggan</a>
+    <a href="../penjualan/index.php">Penjualan</a>
 </body>
 </html>

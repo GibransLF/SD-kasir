@@ -27,51 +27,25 @@ if(!$tableExists){
 }
 //end produk
 
-//membbuat tabel pelanggan
-//cek tabel pelanggan
-$query = "SHOW TABLES LIKE 'pelanggan'";
-$result = mysqli_query($conn, $query);
-$tableExists = mysqli_num_rows($result) > 0;
-
-//membuat tabel pelanggan
-if(!$tableExists){
-    $sql = "CREATE TABLE pelanggan (
-        id_pelanggan INT PRIMARY KEY AUTO_INCREMENT,
-        nama VARCHAR(255),
-        no_hp VARCHAR(20),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    )";
-
-    if (mysqli_query($conn, $sql)) {
-    echo "Table Pelanggan berhasil di buat <br>";
-    } else {
-    echo "Error membuat tabel Pelanggan <br>" . mysqli_error($conn);
-    }
-}
-//end pelanggan
-
 //membuat tabel Penjualan
 //cek tabel Penjualan
 $query = "SHOW TABLES LIKE 'penjualan'";
 $result = mysqli_query($conn, $query);
 $tableExists = mysqli_num_rows($result) > 0;
 
-//membuat tabel penjualan
+//membuat tabel siswa
 if(!$tableExists){
     $sql = "CREATE TABLE penjualan (
         id_penjualan INT(11) AUTO_INCREMENT PRIMARY KEY,
         tanggal DATE,
         produk_id INT(11),
-        pelanggan_id INT(11),
         qty_terjual INT(11),
         total_harga_dasar INT(11),
         total_harga_jual INT(11),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         
-        FOREIGN KEY (produk_id) REFERENCES produk(id_produk),
-        FOREIGN KEY (pelanggan_id) REFERENCES pelanggan(id_pelanggan)
+        FOREIGN KEY (produk_id) REFERENCES produk(id_produk)
     )";
 
 if (mysqli_query($conn, $sql)) {

@@ -41,26 +41,6 @@ else{
 }
 //end produk
 
-//cek tabel pelanggan
-$query = "SHOW TABLES LIKE 'pelanggan'";
-$result = mysqli_query($conn, $query);
-$tableExists = mysqli_num_rows($result) > 0;
-
-if($tableExists){
-    $sql = "DROP TABLE pelanggan";
-    
-    if (mysqli_query($conn, $sql)) {
-        echo "Table Pelanggan berhasil di hapus <br>";
-    } 
-    else {
-        echo "Error menghapus tabel Pelanggan <br>";
-    }
-}
-else{
-    echo "Tabel Produk tidak ada. <br>";
-}
-//end produk
-
 echo "<br> reset selesai <br> <br>";
 mysqli_close($conn);
 
